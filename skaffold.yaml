@@ -1,0 +1,69 @@
+apiVersion: skaffold/v1alpha3
+kind: Config
+build:
+  artifacts:
+  - imageName: registry.ng.bluemix.net/bitl/sb-customer
+    workspace: .
+    docker: {}
+  tagPolicy:
+    sha256: {}
+  local: {}
+deploy:
+  helm:
+    releases:
+    - name: sb-customer-sb-demo
+      chartPath: charts/sb-customer
+      valuesFiles: []
+      values:
+        image: registry.ng.bluemix.net/bitl/sb-customer
+      namespace: sb-demo
+      version: ""
+      setValues:
+        config.data.IAM_URL: https://iam.ng.bluemix.net
+      setValueTemplates: {}
+      wait: true
+      recreatePods: false
+      overrides: {}
+      packaged: null
+      imageStrategy:
+        fqn: null
+        helm: null
+profiles:
+- name: no-push
+  build:
+    artifacts:
+    - imageName: registry.ng.bluemix.net/bitl/sb-customer
+      workspace: .
+      docker: {}
+    tagPolicy:
+      sha256: {}
+    local:
+      skipPush: true
+- name: sb-customer-deployment
+  build:
+    artifacts:
+    - imageName: registry.ng.bluemix.net/bitl/sb-customer
+      workspace: .
+      docker: {}
+    tagPolicy:
+      sha256: {}
+  deploy:
+    helm:
+      releases:
+      - name: sb-customer-sb-demo
+        chartPath: charts/sb-customer
+        valuesFiles: []
+        values:
+          image: registry.ng.bluemix.net/bitl/sb-customer
+        namespace: sb-demo
+        version: ""
+        setValues:
+          config.data.CLOUDANT_HOST_URL: https://92224b75-8659-42f4-94f5-242a41f2e2e3-bluemix.cloudant.com/
+        setValueTemplates: {}
+        wait: true
+        recreatePods: false
+        overrides: {}
+        packaged: null
+        imageStrategy:
+          fqn: null
+          helm: null

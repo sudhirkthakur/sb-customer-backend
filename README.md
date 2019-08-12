@@ -1,2 +1,1 @@
-# sb-customer-backend
-sb-customer-backend
+# sb-customers
