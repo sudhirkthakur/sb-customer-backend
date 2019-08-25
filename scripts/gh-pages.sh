@@ -8,4 +8,4 @@ cd gh-pages
 	git add .
     git status
 	git commit -m "code coverage and static analysis data"
-	git push --force "https://$GITHUB_TOKEN@github.com:sudhirkthakur/sb-customer-backend.git" master:gh-pages
+	git push --force "https://$GITHUB_TOKEN@github.com/sudhirkthakur/sb-customer-backend.git" master:gh-pages
