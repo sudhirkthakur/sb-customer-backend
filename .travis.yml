@@ -1,6 +1,4 @@
-group: bluezone
 language: java
-dist: xenial
 sudo: required
 services:
 - docker
@@ -9,8 +7,6 @@ node_js:
 jdk:
 - openjdk8
 
-before_install:
-- gem update - system 2.7.8
 
 before_script:
 - source scripts/setup-environment.sh
@@ -19,15 +15,8 @@ install:
 - mvn -N io.takari:maven:wrapper
 
 script:
-- ./mvnw clean package
+- ./mvnw clean install
 
-
-after_failure:
--   travis_terminate 1
-
-deploy:
-- provider: script
-  script: skaffold run --profile sb-customer-deployment
-  skip_cleanup: true
-  on:
-    branch: master
+after_deploy:
+- ./scripts/coverage.sh && ./scripts/findbugs.sh
+- ./scripts/gh-pages.sh
