@@ -16,7 +16,5 @@ install:
 
 script:
 - ./mvnw clean install
-
-after_deploy:
 - ./scripts/coverage.sh && ./scripts/findbugs.sh
 - ./scripts/gh-pages.sh
