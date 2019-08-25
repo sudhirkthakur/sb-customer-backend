@@ -38,14 +38,14 @@ public class CustomerServiceImpl implements CustomerService {
 	private static final Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
 	private ObjectMapper mapper;
-	
+
 	@Autowired
 	private RestTemplate template;
 
 	@Autowired
 	private ApplicationConfig appConfig;
 
-	String dbName = "cust";
+	String dbName = "customers";
 
 	@Autowired
 	public CustomerServiceImpl(RestTemplate template, ObjectMapper mapper, ApplicationConfig appConfig) {
@@ -56,9 +56,9 @@ public class CustomerServiceImpl implements CustomerService {
 
 	/**
 	 * Method list the entire customer records from the database.
-	 * @throws AppException 
+	 * @throws AppException
 	 */
-	
+
 	public List<CustomerResponseRows> getAllCustomers() throws AppException {
 
 		final String uri = appConfig.getCloudantHost() + dbName + "/_all_docs?include_docs=true";
@@ -84,7 +84,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	/**
 	 * Method list single customer records from the database.
-	 * @throws AppException 
+	 * @throws AppException
 	 */
 
 	public CustomerResponseDocs getCustomer(String id) throws AppException {
@@ -92,7 +92,7 @@ public class CustomerServiceImpl implements CustomerService {
 		final String uri = appConfig.getCloudantHost() + dbName + "/" + id;
 		logger.info("Inside the getCustomer " + uri);
 		CustomerResponseDocs customerResponseDocs = null;
-		
+
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
@@ -120,7 +120,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	/**
 	 * Method persists new customer records in the database.
-	 * @throws AppException 
+	 * @throws AppException
 	 */
 
 	public CustomerCreateResponse createCustomer(CreateCustomer createCustomer) throws AppException {
@@ -135,7 +135,7 @@ public class CustomerServiceImpl implements CustomerService {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.add("Authorization", "Basic " + appConfig.getCloudantPassword());
 		HttpEntity<String> entity;
-		
+
 			entity = new HttpEntity<String>(mapper.writeValueAsString(createCustomer), headers);
 			result = template.exchange(uri, HttpMethod.POST, entity, CustomerCreateResponse.class);
 
@@ -155,7 +155,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	/**
 	 * Method update customer records in the database.
-	 * @throws AppException 
+	 * @throws AppException
 	 */
 
 	public CustomerCreateResponse updateCustomer(String id, String rev, UpdateCustomer updateCustomer)
@@ -170,17 +170,17 @@ public class CustomerServiceImpl implements CustomerService {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.add("Authorization", "Basic " + appConfig.getCloudantPassword());
 		HttpEntity<String> entity;
-		
+
 		updateCustomer.set_id(id);
 		updateCustomer.set_rev(rev);
-		
+
 			entity = new HttpEntity<String>(mapper.writeValueAsString(updateCustomer), headers);
 			result = template.exchange(uri, HttpMethod.POST, entity, CustomerCreateResponse.class);
 
 		} catch (JsonProcessingException  e) {
 			// TODO Auto-generated catch block
 			logger.error("JsonProcessing Exception while updating customer records : {}", e.getStackTrace().toString());
-			
+
 		}catch (HttpClientErrorException | HttpServerErrorException e) {
 
 			logger.error("Http Exception while updating customer records : {}", e.getResponseBodyAsString());
@@ -193,7 +193,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	/**
 	 * Method removes customer records from the database.
-	 * @throws AppException 
+	 * @throws AppException
 	 */
 
 	public CustomerCreateResponse deleteCustomer(String id, String rev) throws AppException {
