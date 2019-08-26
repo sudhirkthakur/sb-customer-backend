@@ -16,5 +16,18 @@ install:
 
 script:
 - ./mvnw clean install
+
+
+after_failure:
+-   travis_terminate 1
+
+deploy:
+- provider: script
+  script: skaffold run --profile sb-customer-deployment
+  skip_cleanup: true
+  on:
+    branch: master
+
+after_deploy:
 - ./scripts/coverage.sh && ./scripts/findbugs.sh
 - ./scripts/gh-pages.sh

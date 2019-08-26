@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install kubectl.
-curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.10.0/bin/linux/amd64/kubectl
+curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubectl
 chmod +x kubectl && sudo mv kubectl /usr/local/bin/kubectl
 
 # Install Skaffold.
@@ -16,7 +16,7 @@ tar xzfv ${HELM_TGZ}
 PATH=`pwd`/linux-amd64/:$PATH
 
 # Log into IBM Container Registry.
-echo "$IBM_CR_TOKEN" | docker login --username token --password-stdin registry.ng.bluemix.net/gtd1
+echo "$CR_TOKEN" | docker login --username token --password-stdin registry.ng.bluemix.net/gtd1
 
 # Setup Kubectl.
 export KUBECONFIG=$(pwd)/kubeconfig.yaml
