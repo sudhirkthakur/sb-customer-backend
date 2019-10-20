@@ -1,0 +1,413 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>FindBugs Report</title>
+<style type="text/css">
+		.tablerow0 {
+			background: #EEEEEE;
+		}
+
+		.tablerow1 {
+			background: white;
+		}
+
+		.detailrow0 {
+			background: #EEEEEE;
+		}
+
+		.detailrow1 {
+			background: white;
+		}
+
+		.tableheader {
+			background: #b9b9fe;
+			font-size: larger;
+		}
+
+		.tablerow0:hover, .tablerow1:hover {
+			background: #aaffaa;
+		}
+
+		.priority-1 {
+		    color: red;
+		    font-weight: bold;
+		}
+		.priority-2 {
+		    color: orange;
+		    font-weight: bold;
+		}
+		.priority-3 {
+		    color: green;
+		    font-weight: bold;
+		}
+		.priority-4 {
+		    color: blue;
+		    font-weight: bold;
+		}
+		</style>
+<script type="text/javascript">
+			function toggleRow(elid) {
+				if (document.getElementById) {
+					element = document.getElementById(elid);
+					if (element) {
+						if (element.style.display == 'none') {
+							element.style.display = 'block';
+							//window.status = 'Toggle on!';
+						} else {
+							element.style.display = 'none';
+							//window.status = 'Toggle off!';
+						}
+					}
+				}
+			}
+		</script>
+</head>
+<body>
+<h1>
+<a href="http://findbugs.sourceforge.net">FindBugs</a> Report</h1>
+<h2>Project Information</h2>
+<p>Project: 
+		customer</p>
+<p>FindBugs version: 3.0.1</p>
+<p>Code analyzed:</p>
+<ul>
+<li>/home/travis/build/sudhirkthakur/sb-customer-backend/target/classes</li>
+</ul>
+<p>
+<br />
+<br />
+</p>
+<h2>Metrics</h2>
+<p>985 lines of code analyzed,
+	in 25 classes, 
+	in 9 packages.</p>
+<table cellspacing="2" cellpadding="5" width="500">
+<tr class="tableheader">
+<th align="left">Metric</th>
+<th align="right">Total</th>
+<th align="right">Density*</th>
+</tr>
+<tr class="tablerow0">
+<td>High Priority Warnings</td>
+<td align="right">1</td>
+<td align="right">1.02</td>
+</tr>
+<tr class="tablerow1">
+<td>Medium Priority Warnings</td>
+<td align="right">8</td>
+<td align="right">8.12</td>
+</tr>
+<tr class="$totalClass">
+<td>
+<b>Total Warnings</b>
+</td>
+<td align="right">
+<b>9</b>
+</td>
+<td align="right">
+<b>9.14</b>
+</td>
+</tr>
+</table>
+<p>
+<i>(* Defects per Thousand lines of non-commenting source statements)</i>
+</p>
+<p>
+<br />
+<br />
+</p>
+<h2>Contents</h2>
+<ul>
+<li>
+<a href="#Warnings_CORRECTNESS">Correctness Warnings</a>
+</li>
+<li>
+<a href="#Warnings_MALICIOUS_CODE">Malicious code vulnerability Warnings</a>
+</li>
+<li>
+<a href="#Warnings_STYLE">Dodgy code Warnings</a>
+</li>
+<li>
+<a href="#Details">Details</a>
+</li>
+</ul>
+<h1>Summary</h1>
+<table cellspacing="2" cellpadding="5" width="500">
+<tr class="tableheader">
+<th align="left">Warning Type</th>
+<th align="right">Number</th>
+</tr>
+<tr class="tablerow0">
+<td>
+<a href="#Warnings_CORRECTNESS">Correctness Warnings</a>
+</td>
+<td align="right">4</td>
+</tr>
+<tr class="tablerow1">
+<td>
+<a href="#Warnings_MALICIOUS_CODE">Malicious code vulnerability Warnings</a>
+</td>
+<td align="right">2</td>
+</tr>
+<tr class="tablerow0">
+<td>
+<a href="#Warnings_STYLE">Dodgy code Warnings</a>
+</td>
+<td align="right">3</td>
+</tr>
+<tr class="tablerow1">
+<td>
+<b>Total</b>
+</td>
+<td align="right">
+<b>9</b>
+</td>
+</tr>
+</table>
+<h1>Warnings</h1>
+<p>Click on a warning row to see full context information.</p>
+<h2>
+<a name="Warnings_CORRECTNESS">Correctness Warnings</a>
+</h2>
+<table cellspacing="0" width="100%" class="warningtable">
+<tr class="tableheader">
+<th align="left">Code</th>
+<th align="left">Warning</th>
+</tr>
+<tr onclick="toggleRow('N1019D');" class="tablerow1">
+<td>
+<span class="priority-2">NP</span>
+</td>
+<td>Possible null pointer dereference of result in com.sb.demo.customer.services.impl.CustomerServiceImpl.createCustomer(CreateCustomer) on exception path</td>
+</tr>
+<tr class="detailrow1">
+<td />
+<td>
+<p style="display: none;" id="N1019D">
+<a href="#NP_NULL_ON_SOME_PATH_EXCEPTION">Bug type NP_NULL_ON_SOME_PATH_EXCEPTION (click for details)</a>
+<br />In class com.sb.demo.customer.services.impl.CustomerServiceImpl<br />In method com.sb.demo.customer.services.impl.CustomerServiceImpl.createCustomer(CreateCustomer)<br />Value loaded from result<br />Dereferenced at CustomerServiceImpl.java:[line 153]<br />Known null at CustomerServiceImpl.java:[line 131]</p>
+</td>
+</tr>
+<tr onclick="toggleRow('N101EC');" class="tablerow0">
+<td>
+<span class="priority-2">NP</span>
+</td>
+<td>Possible null pointer dereference of result in com.sb.demo.customer.services.impl.CustomerServiceImpl.updateCustomer(String, String, UpdateCustomer) on exception path</td>
+</tr>
+<tr class="detailrow0">
+<td />
+<td>
+<p style="display: none;" id="N101EC">
+<a href="#NP_NULL_ON_SOME_PATH_EXCEPTION">Bug type NP_NULL_ON_SOME_PATH_EXCEPTION (click for details)</a>
+<br />In class com.sb.demo.customer.services.impl.CustomerServiceImpl<br />In method com.sb.demo.customer.services.impl.CustomerServiceImpl.updateCustomer(String, String, UpdateCustomer)<br />Value loaded from result<br />Dereferenced at CustomerServiceImpl.java:[line 191]<br />Known null at CustomerServiceImpl.java:[line 165]</p>
+</td>
+</tr>
+<tr onclick="toggleRow('N10113');" class="tablerow1">
+<td>
+<span class="priority-2">USELESS_STRING</span>
+</td>
+<td>Invocation of toString on Throwable.getStackTrace() in com.sb.demo.customer.services.impl.CustomerServiceImpl.createCustomer(CreateCustomer)</td>
+</tr>
+<tr class="detailrow1">
+<td />
+<td>
+<p style="display: none;" id="N10113">
+<a href="#DMI_INVOKING_TOSTRING_ON_ARRAY">Bug type DMI_INVOKING_TOSTRING_ON_ARRAY (click for details)</a>
+<br />In class com.sb.demo.customer.services.impl.CustomerServiceImpl<br />In method com.sb.demo.customer.services.impl.CustomerServiceImpl.createCustomer(CreateCustomer)<br />Return value of Throwable.getStackTrace() of type StackTraceElement[]<br />At CustomerServiceImpl.java:[line 144]</p>
+</td>
+</tr>
+<tr onclick="toggleRow('N10158');" class="tablerow0">
+<td>
+<span class="priority-2">USELESS_STRING</span>
+</td>
+<td>Invocation of toString on Throwable.getStackTrace() in com.sb.demo.customer.services.impl.CustomerServiceImpl.updateCustomer(String, String, UpdateCustomer)</td>
+</tr>
+<tr class="detailrow0">
+<td />
+<td>
+<p style="display: none;" id="N10158">
+<a href="#DMI_INVOKING_TOSTRING_ON_ARRAY">Bug type DMI_INVOKING_TOSTRING_ON_ARRAY (click for details)</a>
+<br />In class com.sb.demo.customer.services.impl.CustomerServiceImpl<br />In method com.sb.demo.customer.services.impl.CustomerServiceImpl.updateCustomer(String, String, UpdateCustomer)<br />Return value of Throwable.getStackTrace() of type StackTraceElement[]<br />At CustomerServiceImpl.java:[line 182]</p>
+</td>
+</tr>
+</table>
+<h2>
+<a name="Warnings_MALICIOUS_CODE">Malicious code vulnerability Warnings</a>
+</h2>
+<table cellspacing="0" width="100%" class="warningtable">
+<tr class="tableheader">
+<th align="left">Code</th>
+<th align="left">Warning</th>
+</tr>
+<tr onclick="toggleRow('N10084');" class="tablerow1">
+<td>
+<span class="priority-2">EI</span>
+</td>
+<td>com.sb.demo.customer.exceptions.AppException.getUserMessageParams() may expose internal representation by returning AppException.userMessageParams</td>
+</tr>
+<tr class="detailrow1">
+<td />
+<td>
+<p style="display: none;" id="N10084">
+<a href="#EI_EXPOSE_REP">Bug type EI_EXPOSE_REP (click for details)</a>
+<br />In class com.sb.demo.customer.exceptions.AppException<br />In method com.sb.demo.customer.exceptions.AppException.getUserMessageParams()<br />Field com.sb.demo.customer.exceptions.AppException.userMessageParams<br />At AppException.java:[line 118]</p>
+</td>
+</tr>
+<tr onclick="toggleRow('N100C8');" class="tablerow0">
+<td>
+<span class="priority-2">EI2</span>
+</td>
+<td>com.sb.demo.customer.exceptions.AppException.setUserMessageParams(Object[]) may expose internal representation by storing an externally mutable object into AppException.userMessageParams</td>
+</tr>
+<tr class="detailrow0">
+<td />
+<td>
+<p style="display: none;" id="N100C8">
+<a href="#EI_EXPOSE_REP2">Bug type EI_EXPOSE_REP2 (click for details)</a>
+<br />In class com.sb.demo.customer.exceptions.AppException<br />In method com.sb.demo.customer.exceptions.AppException.setUserMessageParams(Object[])<br />Field com.sb.demo.customer.exceptions.AppException.userMessageParams<br />Local variable named userMessageParams<br />At AppException.java:[line 122]</p>
+</td>
+</tr>
+</table>
+<h2>
+<a name="Warnings_STYLE">Dodgy code Warnings</a>
+</h2>
+<table cellspacing="0" width="100%" class="warningtable">
+<tr class="tableheader">
+<th align="left">Code</th>
+<th align="left">Warning</th>
+</tr>
+<tr onclick="toggleRow('N102C7');" class="tablerow1">
+<td>
+<span class="priority-2">DLS</span>
+</td>
+<td>Dead store to appExceptionResponse in com.sb.demo.customer.utils.ErrorUtil.handleExternalServiceError(Exception)</td>
+</tr>
+<tr class="detailrow1">
+<td />
+<td>
+<p style="display: none;" id="N102C7">
+<a href="#DLS_DEAD_LOCAL_STORE">Bug type DLS_DEAD_LOCAL_STORE (click for details)</a>
+<br />In class com.sb.demo.customer.utils.ErrorUtil<br />In method com.sb.demo.customer.utils.ErrorUtil.handleExternalServiceError(Exception)<br />Local variable named appExceptionResponse<br />At ErrorUtil.java:[line 78]</p>
+</td>
+</tr>
+<tr onclick="toggleRow('N1023B');" class="tablerow0">
+<td>
+<span class="priority-2">NP</span>
+</td>
+<td>Possible null pointer dereference in com.sb.demo.customer.services.impl.CustomerServiceImpl.getAllCustomers() due to return value of called method</td>
+</tr>
+<tr class="detailrow0">
+<td />
+<td>
+<p style="display: none;" id="N1023B">
+<a href="#NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE">Bug type NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE (click for details)</a>
+<br />In class com.sb.demo.customer.services.impl.CustomerServiceImpl<br />In method com.sb.demo.customer.services.impl.CustomerServiceImpl.getAllCustomers()<br />Local variable stored in JVM register ?<br />Dereferenced at CustomerServiceImpl.java:[line 82]<br />Known null at CustomerServiceImpl.java:[line 82]</p>
+</td>
+</tr>
+<tr onclick="toggleRow('N10284');" class="tablerow1">
+<td>
+<span class="priority-1">ST</span>
+</td>
+<td>Write to static field com.sb.demo.customer.utils.AppContextUtil.context from instance method com.sb.demo.customer.utils.AppContextUtil.setApplicationContext(ApplicationContext)</td>
+</tr>
+<tr class="detailrow1">
+<td />
+<td>
+<p style="display: none;" id="N10284">
+<a href="#ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD">Bug type ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD (click for details)</a>
+<br />In class com.sb.demo.customer.utils.AppContextUtil<br />In method com.sb.demo.customer.utils.AppContextUtil.setApplicationContext(ApplicationContext)<br />Field com.sb.demo.customer.utils.AppContextUtil.context<br />At AppContextUtil.java:[line 21]</p>
+</td>
+</tr>
+</table>
+<h1>
+<a name="Details">Details</a>
+</h1>
+<h2>
+<a name="DLS_DEAD_LOCAL_STORE">DLS_DEAD_LOCAL_STORE: Dead store to local variable</a>
+</h2>
+
+<p>
+This instruction assigns a value to a local variable,
+but the value is not read or used in any subsequent instruction.
+Often, this indicates an error, because the value computed is never
+used.
+</p>
+<p>
+Note that Sun's javac compiler often generates dead stores for
+final local variables.  Because FindBugs is a bytecode-based tool,
+there is no easy way to eliminate these false positives.
+</p>
+
+    
+<h2>
+<a name="EI_EXPOSE_REP">EI_EXPOSE_REP: May expose internal representation by returning reference to mutable object</a>
+</h2>
+
+  <p> Returning a reference to a mutable object value stored in one of the object's fields
+  exposes the internal representation of the object.&nbsp;
+   If instances
+   are accessed by untrusted code, and unchecked changes to
+   the mutable object would compromise security or other
+   important properties, you will need to do something different.
+  Returning a new copy of the object is better approach in many situations.</p>
+
+    
+<h2>
+<a name="EI_EXPOSE_REP2">EI_EXPOSE_REP2: May expose internal representation by incorporating reference to mutable object</a>
+</h2>
+
+  <p> This code stores a reference to an externally mutable object into the
+  internal representation of the object.&nbsp;
+   If instances
+   are accessed by untrusted code, and unchecked changes to
+   the mutable object would compromise security or other
+   important properties, you will need to do something different.
+  Storing a copy of the object is better approach in many situations.</p>
+
+    
+<h2>
+<a name="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE">NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE: Possible null pointer dereference due to return value of called method</a>
+</h2>
+      
+<p> The return value from a method is dereferenced without a null check,
+and the return value of that method is one that should generally be checked
+for null.  This may lead to a <code>NullPointerException</code> when the code is executed.
+</p>
+      
+   
+<h2>
+<a name="NP_NULL_ON_SOME_PATH_EXCEPTION">NP_NULL_ON_SOME_PATH_EXCEPTION: Possible null pointer dereference in method on exception path</a>
+</h2>
+
+<p> A reference value which is null on some exception control path is
+dereferenced here.&nbsp; This may lead to a <code>NullPointerException</code>
+when the code is executed.&nbsp;
+Note that because FindBugs currently does not prune infeasible exception paths,
+this may be a false warning.</p>
+
+<p> Also note that FindBugs considers the default case of a switch statement to
+be an exception path, since the default case is often infeasible.</p>
+
+    
+<h2>
+<a name="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD">ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD: Write to static field from instance method</a>
+</h2>
+
+  <p> This instance method writes to a static field. This is tricky to get
+correct if multiple instances are being manipulated,
+and generally bad practice.
+</p>
+
+    
+<h2>
+<a name="DMI_INVOKING_TOSTRING_ON_ARRAY">DMI_INVOKING_TOSTRING_ON_ARRAY: Invocation of toString on an array</a>
+</h2>
+
+<p>
+The code invokes toString on an array, which will generate a fairly useless result
+such as [C@16f0472. Consider using Arrays.toString to convert the array into a readable
+String that gives the contents of the array. See Programming Puzzlers, chapter 3, puzzle 12.
+</p>
+
+    </body>
+</html>

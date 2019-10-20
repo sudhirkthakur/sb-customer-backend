@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomerServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">customer</a> &gt; <a href="index.source.html" class="el_package">com.sb.demo.customer.services.impl</a> &gt; <span class="el_source">CustomerServiceImpl.java</span></div><h1>CustomerServiceImpl.java</h1><pre class="source lang-java linenums">package com.sb.demo.customer.services.impl;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sb.demo.customer.config.ApplicationConfig;
+import com.sb.demo.customer.exceptions.AppException;
+import com.sb.demo.customer.models.request.CreateCustomer;
+import com.sb.demo.customer.models.request.UpdateCustomer;
+import com.sb.demo.customer.models.responses.CustomerCreateResponse;
+import com.sb.demo.customer.models.responses.CustomerResponse;
+import com.sb.demo.customer.models.responses.CustomerResponseDocs;
+import com.sb.demo.customer.models.responses.CustomerResponseRows;
+import com.sb.demo.customer.services.CustomerService;
+import com.sb.demo.customer.utils.ErrorUtil;
+
+@Service(&quot;customerService&quot;)
+public class CustomerServiceImpl implements CustomerService {
+
+<span class="nc" id="L38">	private static final Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);</span>
+
+	private ObjectMapper mapper;
+
+	@Autowired
+	private RestTemplate template;
+
+	@Autowired
+	private ApplicationConfig appConfig;
+
+<span class="nc" id="L48">	String dbName = &quot;customers&quot;;</span>
+
+	@Autowired
+<span class="nc" id="L51">	public CustomerServiceImpl(RestTemplate template, ObjectMapper mapper, ApplicationConfig appConfig) {</span>
+<span class="nc" id="L52">		this.template = template;</span>
+<span class="nc" id="L53">		this.mapper = mapper;</span>
+<span class="nc" id="L54">		this.appConfig = appConfig;</span>
+<span class="nc" id="L55">	}</span>
+
+	/**
+	 * Method list the entire customer records from the database.
+	 * @throws AppException
+	 */
+
+	public List&lt;CustomerResponseRows&gt; getAllCustomers() throws AppException {
+
+<span class="nc" id="L64">		final String uri = appConfig.getCloudantHost() + dbName + &quot;/_all_docs?include_docs=true&quot;;</span>
+<span class="nc" id="L65">		logger.info(&quot;Inside the getAllCustomers &quot; + uri);</span>
+<span class="nc" id="L66">		ResponseEntity&lt;CustomerResponse&gt; result = null;</span>
+
+		try {
+<span class="nc" id="L69">			HttpHeaders headers = new HttpHeaders();</span>
+<span class="nc" id="L70">			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));</span>
+<span class="nc" id="L71">			headers.setContentType(MediaType.APPLICATION_JSON);</span>
+
+<span class="nc" id="L73">			headers.add(&quot;Authorization&quot;, &quot;Basic &quot; + appConfig.getCloudantPassword());</span>
+<span class="nc" id="L74">			HttpEntity&lt;String&gt; entity = new HttpEntity&lt;String&gt;(&quot;parameters&quot;, headers);</span>
+
+<span class="nc" id="L76">			result = template.exchange(uri, HttpMethod.GET, entity, CustomerResponse.class);</span>
+<span class="nc" id="L77">		} catch (HttpClientErrorException | HttpServerErrorException e) {</span>
+<span class="nc" id="L78">			logger.error(&quot;Http Exception while fetchfing customers records: {}&quot;, e.getResponseBodyAsString());</span>
+<span class="nc" id="L79">			ErrorUtil.handleExternalServiceError(e);</span>
+
+<span class="nc" id="L81">		}</span>
+<span class="nc" id="L82">		return result.getBody().getRows();</span>
+	}
+
+	/**
+	 * Method list single customer records from the database.
+	 * @throws AppException
+	 */
+
+	public CustomerResponseDocs getCustomer(String id) throws AppException {
+
+<span class="nc" id="L92">		final String uri = appConfig.getCloudantHost() + dbName + &quot;/&quot; + id;</span>
+<span class="nc" id="L93">		logger.info(&quot;Inside the getCustomer &quot; + uri);</span>
+<span class="nc" id="L94">		CustomerResponseDocs customerResponseDocs = null;</span>
+
+		try {
+<span class="nc" id="L97">			HttpHeaders headers = new HttpHeaders();</span>
+<span class="nc" id="L98">			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));</span>
+<span class="nc" id="L99">			headers.setContentType(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L100">			headers.add(&quot;Authorization&quot;, &quot;Basic &quot; + appConfig.getCloudantPassword());</span>
+<span class="nc" id="L101">			HttpEntity&lt;String&gt; entity = new HttpEntity&lt;String&gt;(&quot;parameters&quot;, headers);</span>
+
+<span class="nc" id="L103">			ResponseEntity&lt;CustomerResponseDocs&gt; result = template.exchange(uri, HttpMethod.GET, entity,</span>
+					CustomerResponseDocs.class);
+
+<span class="nc bnc" id="L106" title="All 6 branches missed.">			if (result != null &amp;&amp; result.getStatusCode().equals(HttpStatus.OK) &amp;&amp; result.getBody() != null) {</span>
+<span class="nc" id="L107">				customerResponseDocs = result.getBody();</span>
+			}
+
+<span class="nc" id="L110">		} catch (HttpClientErrorException | HttpServerErrorException e) {</span>
+
+<span class="nc" id="L112">			logger.error(&quot;Http Exception while retriving customer records: {}&quot;, e.getResponseBodyAsString());</span>
+<span class="nc" id="L113">			ErrorUtil.handleExternalServiceError(e);</span>
+
+<span class="nc" id="L115">		}</span>
+
+<span class="nc" id="L117">		return customerResponseDocs;</span>
+
+	}
+
+	/**
+	 * Method persists new customer records in the database.
+	 * @throws AppException
+	 */
+
+	public CustomerCreateResponse createCustomer(CreateCustomer createCustomer) throws AppException {
+
+<span class="nc" id="L128">		final String uri = appConfig.getCloudantHost() + dbName;</span>
+
+<span class="nc" id="L130">		logger.info(&quot;Inside the createCustomer &quot; + uri);</span>
+<span class="nc" id="L131">		ResponseEntity&lt;CustomerCreateResponse&gt; result = null;</span>
+		try {
+<span class="nc" id="L133">		HttpHeaders headers = new HttpHeaders();</span>
+<span class="nc" id="L134">		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));</span>
+<span class="nc" id="L135">		headers.setContentType(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L136">		headers.add(&quot;Authorization&quot;, &quot;Basic &quot; + appConfig.getCloudantPassword());</span>
+		HttpEntity&lt;String&gt; entity;
+
+<span class="nc" id="L139">			entity = new HttpEntity&lt;String&gt;(mapper.writeValueAsString(createCustomer), headers);</span>
+<span class="nc" id="L140">			result = template.exchange(uri, HttpMethod.POST, entity, CustomerCreateResponse.class);</span>
+
+<span class="nc" id="L142">		} catch (JsonProcessingException e) {</span>
+
+<span class="nc" id="L144">			logger.error(&quot;JsonProcessing Exception while creating customer records : {}&quot;, e.getStackTrace().toString());</span>
+		}
+<span class="nc" id="L146">		catch (HttpClientErrorException | HttpServerErrorException e) {</span>
+
+<span class="nc" id="L148">			logger.error(&quot;Http Exception while creating new customer records {}&quot;, e.getResponseBodyAsString());</span>
+<span class="nc" id="L149">			ErrorUtil.handleExternalServiceError(e);</span>
+
+<span class="nc" id="L151">		}</span>
+
+<span class="nc" id="L153">		return result.getBody();</span>
+	}
+
+	/**
+	 * Method update customer records in the database.
+	 * @throws AppException
+	 */
+
+	public CustomerCreateResponse updateCustomer(String id, String rev, UpdateCustomer updateCustomer)
+			throws AppException {
+
+<span class="nc" id="L164">		final String uri = appConfig.getCloudantHost() + dbName;</span>
+<span class="nc" id="L165">		ResponseEntity&lt;CustomerCreateResponse&gt; result = null;</span>
+		try {
+<span class="nc" id="L167">		logger.info(&quot;Inside the updateCustomer &quot; + uri);</span>
+<span class="nc" id="L168">		HttpHeaders headers = new HttpHeaders();</span>
+<span class="nc" id="L169">		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));</span>
+<span class="nc" id="L170">		headers.setContentType(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L171">		headers.add(&quot;Authorization&quot;, &quot;Basic &quot; + appConfig.getCloudantPassword());</span>
+		HttpEntity&lt;String&gt; entity;
+
+<span class="nc" id="L174">		updateCustomer.set_id(id);</span>
+<span class="nc" id="L175">		updateCustomer.set_rev(rev);</span>
+
+<span class="nc" id="L177">			entity = new HttpEntity&lt;String&gt;(mapper.writeValueAsString(updateCustomer), headers);</span>
+<span class="nc" id="L178">			result = template.exchange(uri, HttpMethod.POST, entity, CustomerCreateResponse.class);</span>
+
+<span class="nc" id="L180">		} catch (JsonProcessingException  e) {</span>
+			// TODO Auto-generated catch block
+<span class="nc" id="L182">			logger.error(&quot;JsonProcessing Exception while updating customer records : {}&quot;, e.getStackTrace().toString());</span>
+
+<span class="nc" id="L184">		}catch (HttpClientErrorException | HttpServerErrorException e) {</span>
+
+<span class="nc" id="L186">			logger.error(&quot;Http Exception while updating customer records : {}&quot;, e.getResponseBodyAsString());</span>
+<span class="nc" id="L187">			ErrorUtil.handleExternalServiceError(e);</span>
+
+<span class="nc" id="L189">		}</span>
+
+<span class="nc" id="L191">		return result.getBody();</span>
+	}
+
+	/**
+	 * Method removes customer records from the database.
+	 * @throws AppException
+	 */
+
+	public CustomerCreateResponse deleteCustomer(String id, String rev) throws AppException {
+
+<span class="nc" id="L201">		final String uri = appConfig.getCloudantHost() + dbName + &quot;/&quot; + id + &quot;?rev=&quot; + rev;</span>
+<span class="nc" id="L202">		logger.info(&quot;Inside the deleteCustomer &quot; + uri);</span>
+<span class="nc" id="L203">		ResponseEntity&lt;CustomerCreateResponse&gt; result =null;</span>
+		try {
+<span class="nc" id="L205">		HttpHeaders headers = new HttpHeaders();</span>
+<span class="nc" id="L206">		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));</span>
+<span class="nc" id="L207">		headers.setContentType(MediaType.APPLICATION_JSON);</span>
+<span class="nc" id="L208">		headers.add(&quot;Authorization&quot;, &quot;Basic &quot; + appConfig.getCloudantPassword());</span>
+<span class="nc" id="L209">		HttpEntity&lt;String&gt; entity = new HttpEntity&lt;String&gt;(&quot;parameters&quot;, headers);</span>
+
+<span class="nc" id="L211">		result = template.exchange(uri, HttpMethod.DELETE, entity,</span>
+				CustomerCreateResponse.class);
+<span class="nc" id="L213">		}catch (HttpClientErrorException | HttpServerErrorException e) {</span>
+<span class="nc" id="L214">			logger.error(&quot;Http Exception while deleting customer records: {}&quot;, e.getResponseBodyAsString());</span>
+<span class="nc" id="L215">			ErrorUtil.handleExternalServiceError(e);</span>
+
+<span class="nc" id="L217">		}</span>
+<span class="nc" id="L218">		return result.getBody();</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ErrorUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">customer</a> &gt; <a href="index.source.html" class="el_package">com.sb.demo.customer.utils</a> &gt; <span class="el_source">ErrorUtil.java</span></div><h1>ErrorUtil.java</h1><pre class="source lang-java linenums">package com.sb.demo.customer.utils;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.sb.demo.customer.exceptions.AppException;
+import com.sb.demo.customer.models.responses.AppExceptionResponse;
+
+@Component
+public class ErrorUtil {
+	
+<span class="fc" id="L28">	private static final Logger logger = LoggerFactory.getLogger(ErrorUtil.class);</span>
+	private HashMap&lt;String, HttpStatus&gt; errorResponseStatus;
+	
+	@Autowired
+<span class="nc" id="L32">	public ErrorUtil() {</span>
+<span class="nc" id="L33">		init();		</span>
+<span class="nc" id="L34">	}</span>
+	
+	private void init() {
+<span class="nc" id="L37">		errorResponseStatus = new HashMap&lt;String, HttpStatus&gt;();</span>
+<span class="nc" id="L38">		errorResponseStatus.put(Constants.CUST_101, HttpStatus.BAD_REQUEST);</span>
+<span class="nc" id="L39">		errorResponseStatus.put(Constants.CUST_102, HttpStatus.UNAUTHORIZED);</span>
+<span class="nc" id="L40">		errorResponseStatus.put(Constants.CUST_103, HttpStatus.NOT_FOUND);</span>
+<span class="nc" id="L41">		errorResponseStatus.put(Constants.CUST_104, HttpStatus.FORBIDDEN);</span>
+<span class="nc" id="L42">		errorResponseStatus.put(Constants.CUST_105, HttpStatus.CONFLICT);</span>
+<span class="nc" id="L43">		errorResponseStatus.put(Constants.CUST_106, HttpStatus.NO_CONTENT);</span>
+<span class="nc" id="L44">		errorResponseStatus.put(Constants.CUST_110, HttpStatus.OK);</span>
+<span class="nc" id="L45">		errorResponseStatus.put(Constants.CUST_111, HttpStatus.INTERNAL_SERVER_ERROR);</span>
+<span class="nc" id="L46">	}</span>
+
+	public static void handleExternalServiceError(Exception exception) throws AppException {
+
+<span class="nc" id="L50">		String errorCode = null;</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">		if (exception instanceof HttpClientErrorException) {</span>
+<span class="nc bnc" id="L52" title="All 6 branches missed.">			switch (((HttpStatusCodeException) exception).getStatusCode()) {</span>
+			case BAD_REQUEST:
+<span class="nc" id="L54">				errorCode = Constants.CUST_101;</span>
+<span class="nc" id="L55">				break;</span>
+			case UNAUTHORIZED:
+<span class="nc" id="L57">				errorCode = Constants.CUST_102;	</span>
+<span class="nc" id="L58">				break;</span>
+			case NOT_FOUND:
+<span class="nc" id="L60">				errorCode = Constants.CUST_103;</span>
+<span class="nc" id="L61">				break;</span>
+			case FORBIDDEN:
+<span class="nc" id="L63">				errorCode = Constants.CUST_104;</span>
+<span class="nc" id="L64">				break;</span>
+			case CONFLICT:
+<span class="nc" id="L66">				errorCode = Constants.CUST_105;</span>
+<span class="nc" id="L67">				break;</span>
+			default:
+<span class="nc" id="L69">				errorCode = Constants.CUST_106;</span>
+			}
+<span class="nc" id="L71">			logger.error(&quot;HTTP Client error while connecting to cloudant database with status code {}&quot;,</span>
+<span class="nc" id="L72">					((HttpClientErrorException) exception).getStatusCode(), exception);</span>
+<span class="nc" id="L73">			String errorResponse = ((HttpClientErrorException) exception).getResponseBodyAsString();</span>
+<span class="nc" id="L74">			ObjectMapper mapper = new ObjectMapper();</span>
+			
+<span class="nc" id="L76">			AppExceptionResponse appExceptionResponse = null;</span>
+			try {
+<span class="nc" id="L78">				appExceptionResponse = mapper.readValue(errorResponse, AppExceptionResponse.class);</span>
+<span class="nc" id="L79">			} catch (IOException e1) {</span>
+<span class="nc" id="L80">				throw new AppException(exception, Constants.CUST_110);</span>
+<span class="nc" id="L81">			}</span>
+<span class="nc" id="L82">			throw new AppException(errorCode);</span>
+
+<span class="nc bnc" id="L84" title="All 2 branches missed.">		} else if (exception instanceof HttpServerErrorException) {</span>
+<span class="nc" id="L85">			logger.error(&quot;HTTP Server error while connecting to cloudant database with status code {}&quot;,</span>
+<span class="nc" id="L86">					((HttpServerErrorException) exception).getStatusCode(), exception);</span>
+<span class="nc" id="L87">			throw new AppException(Constants.CUST_111);</span>
+		} 
+		
+		
+		
+<span class="nc" id="L92">	}</span>
+	
+	public HttpStatus getHttpStatus(String errorCode) {
+
+<span class="nc" id="L96">		HttpStatus httpStatus = errorResponseStatus.get(errorCode);</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">		if (httpStatus == null) {</span>
+<span class="nc" id="L98">			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;</span>
+<span class="nc" id="L99">			logger.warn(&quot;Response HttpStatus Code not configured for Error Code: &quot; + errorCode</span>
+					+ &quot;. Defaulting it to INTERNAL_SERVER_ERROR.&quot;);
+		}
+<span class="nc" id="L102">		return httpStatus;</span>
+	}
+
+	
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
